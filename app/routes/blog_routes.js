@@ -43,7 +43,8 @@ router.get('/blogs', (req, res, next) => {
 // SHOW
 // GET /blogs/5a7db6c74d55bc51bdf39793
 router.get('/blogs', (req, res, next) => {
-  Blog.findById().populate('comments')
+  Blog.findById(req.params.id)
+    .then(handle404)
     .then(blogs => res.status(200).json({ blog: blogs }))
     .catch(next)
 })
