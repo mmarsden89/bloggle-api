@@ -26,7 +26,7 @@ const requireToken = passport.authenticate('bearer', { session: false })
 
 // instantiate a router (mini app that only handles routes)
 const router = express.Router()
-const Comment = require('../models/comment')
+// const Comment = require('../models/comment')
 
 // INDEX
 // GET /blogs
@@ -74,7 +74,7 @@ router.patch('/blogs/:id', requireToken, removeBlanks, (req, res, next) => {
   delete req.body.blog.owner
 
   Blog.findById(req.params.id)
-    .populate('id')
+    // .populate('id')
     .then(handle404)
     .then(blog => {
       // pass the `req` object and the Mongoose record to `requireOwnership`
