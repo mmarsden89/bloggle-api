@@ -41,7 +41,7 @@ router.get('/blogs', (req, res, next) => {
 })
 
 // SHOW
-// GET /blogs/5a7db6c74d55bc51bdf39793
+// GET /blogs/
 router.get('/blogs', (req, res, next) => {
   Blog.findById(req.params.id)
     .then(handle404)
@@ -67,7 +67,7 @@ router.post('/blogs', requireToken, (req, res, next) => {
 })
 
 // UPDATE
-// PATCH /blogs/5a7db6c74d55bc51bdf39793
+// PATCH /blogs/
 router.patch('/blogs/:id', requireToken, removeBlanks, (req, res, next) => {
   // if the client attempts to change the `owner` property by including a new
   // owner, prevent that by deleting that key/value pair
@@ -91,7 +91,7 @@ router.patch('/blogs/:id', requireToken, removeBlanks, (req, res, next) => {
 })
 
 // DESTROY
-// DELETE /blogs/5a7db6c74d55bc51bdf39793
+// DELETE /blogs/
 router.delete('/blogs/:id', requireToken, (req, res, next) => {
   Blog.findById(req.params.id)
     .then(handle404)
