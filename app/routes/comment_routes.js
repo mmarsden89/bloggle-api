@@ -31,7 +31,6 @@ const router = express.Router()
 // GET /comments
 router.get('/comments', (req, res, next) => {
   Comment.find()
-    .populate('post_owner', 'title')
     .populate('owner', 'email')
     .then(comments => {
       // `comments` will be an array of Mongoose documents
@@ -46,7 +45,7 @@ router.get('/comments', (req, res, next) => {
 })
 
 // SHOW
-// GET /comments/5a7db6c74d55bc51bdf39793
+// GET /comments/
 router.get('/comments/:id', (req, res, next) => {
   // req.params.id will be set based on the `:id` in the route
   Comment.findById(req.params.id)
@@ -75,7 +74,7 @@ router.post('/comments', requireToken, (req, res, next) => {
 })
 
 // UPDATE
-// PATCH /comments/5a7db6c74d55bc51bdf39793
+// PATCH /comments/
 router.patch('/comments/:id', requireToken, removeBlanks, (req, res, next) => {
   // if the client attempts to change the `owner` property by including a new
   // owner, prevent that by deleting that key/value pair
@@ -98,7 +97,7 @@ router.patch('/comments/:id', requireToken, removeBlanks, (req, res, next) => {
 })
 
 // DESTROY
-// DELETE /comments/5a7db6c74d55bc51bdf39793
+// DELETE /comments/
 router.delete('/comments/:id', requireToken, (req, res, next) => {
   Comment.findById(req.params.id)
     .then(handle404)

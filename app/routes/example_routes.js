@@ -44,7 +44,7 @@ router.get('/examples', requireToken, (req, res, next) => {
 })
 
 // SHOW
-// GET /examples/5a7db6c74d55bc51bdf39793
+// GET /examples/
 router.get('/examples/:id', requireToken, (req, res, next) => {
   // req.params.id will be set based on the `:id` in the route
   Example.findById(req.params.id)
@@ -73,7 +73,7 @@ router.post('/examples', requireToken, (req, res, next) => {
 })
 
 // UPDATE
-// PATCH /examples/5a7db6c74d55bc51bdf39793
+// PATCH /examples/
 router.patch('/examples/:id', requireToken, removeBlanks, (req, res, next) => {
   // if the client attempts to change the `owner` property by including a new
   // owner, prevent that by deleting that key/value pair
@@ -96,7 +96,7 @@ router.patch('/examples/:id', requireToken, removeBlanks, (req, res, next) => {
 })
 
 // DESTROY
-// DELETE /examples/5a7db6c74d55bc51bdf39793
+// DELETE /examples/
 router.delete('/examples/:id', requireToken, (req, res, next) => {
   Example.findById(req.params.id)
     .then(handle404)
