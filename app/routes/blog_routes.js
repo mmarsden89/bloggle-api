@@ -32,6 +32,7 @@ const router = express.Router()
 // GET /blogs
 router.get('/blogs', (req, res, next) => {
   Blog.find()
+    .populate('owner', 'email')
     .then(blogs => {
       return blogs.map(blog => blog.toObject())
     })
