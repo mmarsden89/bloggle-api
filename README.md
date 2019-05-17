@@ -85,8 +85,9 @@ blogs button. Comments and related CRUD buttons are populated to individual blog
 - As a signed in user, I would to update my blog posts and comments.
 - As a signed in user, I would to delete my blog posts and comments.
 
-## Wireframe and ERD:
+## ERD:
 
+[ERD](https://i.imgur.com/NGzSRlv.png)
 
 ### Technologies Used:
 - html
