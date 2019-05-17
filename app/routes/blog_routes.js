@@ -26,12 +26,13 @@ const requireToken = passport.authenticate('bearer', { session: false })
 
 // instantiate a router (mini app that only handles routes)
 const router = express.Router()
-const Comment = require('../models/comment')
+// const Comment = require('../models/comment')
 
 // INDEX
 // GET /blogs
 router.get('/blogs', (req, res, next) => {
   Blog.find()
+    .populate('owner', 'email')
     .then(blogs => {
       return blogs.map(blog => blog.toObject())
     })
@@ -41,7 +42,7 @@ router.get('/blogs', (req, res, next) => {
 })
 
 // SHOW
-// GET /blogs/5a7db6c74d55bc51bdf39793
+// GET /blogs/
 router.get('/blogs', (req, res, next) => {
   Blog.findById(req.params.id)
     .then(handle404)
@@ -67,14 +68,14 @@ router.post('/blogs', requireToken, (req, res, next) => {
 })
 
 // UPDATE
-// PATCH /blogs/5a7db6c74d55bc51bdf39793
+// PATCH /blogs/
 router.patch('/blogs/:id', requireToken, removeBlanks, (req, res, next) => {
   // if the client attempts to change the `owner` property by including a new
   // owner, prevent that by deleting that key/value pair
   delete req.body.blog.owner
 
   Blog.findById(req.params.id)
-    .populate('id')
+    // .populate('id')
     .then(handle404)
     .then(blog => {
       // pass the `req` object and the Mongoose record to `requireOwnership`
@@ -91,7 +92,7 @@ router.patch('/blogs/:id', requireToken, removeBlanks, (req, res, next) => {
 })
 
 // DESTROY
-// DELETE /blogs/5a7db6c74d55bc51bdf39793
+// DELETE /blogs/
 router.delete('/blogs/:id', requireToken, (req, res, next) => {
   Blog.findById(req.params.id)
     .then(handle404)

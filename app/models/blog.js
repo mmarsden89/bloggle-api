@@ -19,10 +19,4 @@ const blogSchema = new mongoose.Schema({
   toObjects: {virtuals: true}
 })
 
-blogSchema.virtual('comments', {
-  ref: 'Comment',
-  localField: '_id',
-  foreignField: 'blog'
-})
-
 module.exports = mongoose.model('Blog', blogSchema)
