@@ -31,7 +31,7 @@ const router = express.Router()
 // INDEX
 // GET /blogs
 router.get('/blogs', (req, res, next) => {
-  Blog.find()
+  Blog.find().populate('comments').populate({path: 'comments'})
     .populate('owner', 'email')
     .then(blogs => {
       return blogs.map(blog => blog.toObject())
@@ -44,8 +44,11 @@ router.get('/blogs', (req, res, next) => {
 // SHOW
 // GET /blogs/
 router.get('/blogs', (req, res, next) => {
-  Blog.findById(req.params.id)
+  Blog.find()
     .then(handle404)
+    .then(blogs => {
+      return blogs.map(blog => blog.toObject())
+    })
     .then(blogs => res.status(200).json({ blog: blogs }))
     .catch(next)
 })

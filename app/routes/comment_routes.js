@@ -52,7 +52,7 @@ router.get('/comments/:id', (req, res, next) => {
   Comment.findById(req.params.id)
     .then(handle404)
     // if `findById` is succesful, respond with 200 and "comment" JSON
-    .then(comment => res.status(200).json({ comment: comment.toObject() }))
+    .then(comment => res.status(200).json({ comment: comment }))
     // if an error occurs, pass it to the handler
     .catch(next)
 })
