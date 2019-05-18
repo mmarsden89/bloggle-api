@@ -31,7 +31,6 @@ const router = express.Router()
 // GET /comments
 router.get('/comments', (req, res, next) => {
   Comment.find()
-    .populate('post_owner', 'title')
     .populate('owner', 'email')
     .then(comments => {
       // `comments` will be an array of Mongoose documents
@@ -50,9 +49,10 @@ router.get('/comments', (req, res, next) => {
 router.get('/comments/:id', (req, res, next) => {
   // req.params.id will be set based on the `:id` in the route
   Comment.findById(req.params.id)
+    .populate('owner', 'email')
     .then(handle404)
     // if `findById` is succesful, respond with 200 and "comment" JSON
-    .then(comment => res.status(200).json({ comment: comment }))
+    .then(comment => res.status(200).json({ comment: comment.toObject() }))
     // if an error occurs, pass it to the handler
     .catch(next)
 })
