@@ -26,7 +26,7 @@ const requireToken = passport.authenticate('bearer', { session: false })
 
 // instantiate a router (mini app that only handles routes)
 const router = express.Router()
-// const Comment = require('../models/comment')
+const Comment = require('../models/comment')
 
 // INDEX
 // GET /blogs
@@ -42,13 +42,14 @@ router.get('/blogs', (req, res, next) => {
 
 // SHOW
 // GET /blogs/
-router.get('/blogs', (req, res, next) => {
-  Blog.find()
+router.get('/blogs/:id', (req, res, next) => {
+  Blog.findById(req.params.id).populate('comments')
     .then(handle404)
-    .then(blogs => {
-      return blogs.map(blog => blog.toObject())
+    .then(blog => {
+      Comment.find({ blog: blog._id })
+        .then(blogs => res.status(200).json({ blog: blog, comments: blog.comments }))
+        .catch(next)
     })
-    .then(blogs => res.status(200).json({ blog: blogs }))
     .catch(next)
 })
 
