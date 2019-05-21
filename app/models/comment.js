@@ -20,4 +20,10 @@ const commentSchema = new mongoose.Schema({
   toObject: {virtuals: true}
 })
 
+commentSchema.virtual('username', {
+  ref: 'User',
+  localField: 'owner',
+  foreignField: '_id'
+})
+
 module.exports = mongoose.model('Comment', commentSchema)

@@ -31,7 +31,7 @@ const Comment = require('../models/comment')
 // INDEX
 // GET /blogs
 router.get('/blogs', (req, res, next) => {
-  Blog.find().populate('comments')
+  Blog.find().populate('comments').populate('username').populate({path: 'comments', populate: {path: 'username', select: 'username'}})
     .then(blogs => {
       return blogs.map(blog => blog.toObject())
     })
@@ -43,7 +43,7 @@ router.get('/blogs', (req, res, next) => {
 // SHOW
 // GET /blogs/
 router.get('/blogs/:id', (req, res, next) => {
-  Blog.findById(req.params.id).populate('comments')
+  Blog.findById(req.params.id).populate('comments').populate('username')
     .then(handle404)
     .then(blog => {
       Comment.find({ blog: blog._id })
