@@ -26,13 +26,12 @@ const requireToken = passport.authenticate('bearer', { session: false })
 
 // instantiate a router (mini app that only handles routes)
 const router = express.Router()
-// const Comment = require('../models/comment')
+const Comment = require('../models/comment')
 
 // INDEX
 // GET /blogs
 router.get('/blogs', (req, res, next) => {
-  Blog.find()
-    .populate('owner', 'email')
+  Blog.find().populate('comments').populate('username', 'username').populate({path: 'comments', populate: {path: 'username', select: 'username'}})
     .then(blogs => {
       return blogs.map(blog => blog.toObject())
     })
@@ -43,10 +42,14 @@ router.get('/blogs', (req, res, next) => {
 
 // SHOW
 // GET /blogs/
-router.get('/blogs', (req, res, next) => {
-  Blog.findById(req.params.id)
+router.get('/blogs/:id', (req, res, next) => {
+  Blog.findById(req.params.id).populate('comments').populate('username', 'username').populate({path: 'comments', populate: {path: 'owner', select: 'username'}})
     .then(handle404)
-    .then(blogs => res.status(200).json({ blog: blogs }))
+    .then(blog => {
+      Comment.find({ blog: blog._id })
+        .then(blogs => res.status(200).json({ blog: blog, comments: blog.comments, username: blog.username }))
+        .catch(next)
+    })
     .catch(next)
 })
 
@@ -105,6 +108,26 @@ router.delete('/blogs/:id', requireToken, (req, res, next) => {
     // send back 204 and no content if the deletion succeeded
     .then(() => res.sendStatus(204))
     // if an error occurs, pass it to the handler
+    .catch(next)
+})
+
+router.patch('/likes/:id', requireToken, removeBlanks, (req, res, next) => {
+  const liker = req.body.blog.likes
+  delete req.body.blog
+
+  Blog.findById(req.params.id)
+    .then(handle404)
+    .then(blog => {
+      const hasLiked = blog.likes.some(like => {
+        return like.toString() === liker
+      })
+      if (hasLiked) {
+        return blog.update({$pull: {likes: liker}})
+      } else {
+        return blog.update({$push: {likes: liker}})
+      }
+    })
+    .then(blog => res.sendStatus(204))
     .catch(next)
 })
 

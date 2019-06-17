@@ -13,10 +13,26 @@ const blogSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
-  }
+  },
+  likes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }]
 }, {
   timestamps: true,
-  toObjects: {virtuals: true}
+  toObject: {virtuals: true}
+})
+
+blogSchema.virtual('comments', {
+  ref: 'Comment',
+  localField: '_id',
+  foreignField: 'blog'
+})
+
+blogSchema.virtual('username', {
+  ref: 'User',
+  localField: 'owner',
+  foreignField: '_id'
 })
 
 module.exports = mongoose.model('Blog', blogSchema)
